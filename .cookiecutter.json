@@ -1,0 +1,10 @@
+{
+  "_template": "https://github.com/oncleben31/cookiecutter-homeassistant-custom-component.git",
+  "class_name_prefix": "RitualsGenie",
+  "domain_name": "rituals_genie",
+  "friendly_name": "Rituals Genie",
+  "github_user": "fred-oranje",
+  "project_name": "rituals-genie",
+  "test_suite": "no",
+  "version": "0.0.1"
+}
