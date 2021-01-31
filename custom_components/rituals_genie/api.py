@@ -7,7 +7,7 @@ import aiohttp
 import async_timeout
 
 TIMEOUT = 10
-
+API_URL = "https://rituals.sense-company.com"
 
 _LOGGER: logging.Logger = logging.getLogger(__package__)
 
@@ -20,10 +20,28 @@ class RitualsGenieApiClient:
     ) -> None:
         """Sample API Client."""
         self._username = username
-        self._passeword = password
+        self._password = password
         self._session = session
+        self._account_hash = None
+
+    async def async_login(self) -> dict:
+        """Login using the API"""
+        url = API_URL + "/ocapi/login"
+        response = await self.api_wrapper("post", url, data={"email": self._username, "password": self._password}, headers=HEADERS)
+
+        if (response["account_hash"] == None):
+            raise Exception("Authentication failed")
+        else:
+            self._account_hash = response["account_hash"]
+
+        return response
 
     async def async_get_data(self) -> dict:
+        if self._account_hash == None:
+            await self.async_login()
+
+        _LOGGER.info("Account hash: %s", self._account_hash)
+
         """Get data from the API."""
         url = "https://jsonplaceholder.typicode.com/posts/1"
         return await self.api_wrapper("get", url)
@@ -43,14 +61,9 @@ class RitualsGenieApiClient:
                     response = await self._session.get(url, headers=headers)
                     return await response.json()
 
-                elif method == "put":
-                    await self._session.put(url, headers=headers, json=data)
-
-                elif method == "patch":
-                    await self._session.patch(url, headers=headers, json=data)
-
                 elif method == "post":
-                    await self._session.post(url, headers=headers, json=data)
+                    response = await self._session.post(url, headers=headers, json=data)
+                    return await response.json()
 
         except asyncio.TimeoutError as exception:
             _LOGGER.error(
