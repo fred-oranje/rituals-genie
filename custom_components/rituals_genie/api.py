@@ -51,13 +51,18 @@ class RitualsGenieApiClient:
 
     async def async_get_data(self) -> dict:
         """Get data from the API."""
-        url = "https://jsonplaceholder.typicode.com/posts/1"
+        url = API_URL + "/api/account/hub/" + self._hub_hash
         return await self.api_wrapper("get", url)
 
-    async def async_set_title(self, value: str) -> None:
+    async def async_set_on_off(self, value: bool) -> None:
         """Get data from the API."""
-        url = "https://jsonplaceholder.typicode.com/posts/1"
-        await self.api_wrapper("patch", url, data={"title": value}, headers=HEADERS)
+        if value == True:
+            fanc = "1"
+        else:
+            fanc = "0"
+        url = API_URL + "/api/hub/update/attr?hub=" + self._hub_hash + "&json=%7B%22attr%22%3A%7B%22fanc%22%3A%22" + fanc + "%22%7D%7D"
+
+        await self.api_wrapper("postnonjson", url)
 
     async def api_wrapper(
         self, method: str, url: str, data: dict = {}, headers: dict = {}
@@ -72,6 +77,9 @@ class RitualsGenieApiClient:
                 elif method == "post":
                     response = await self._session.post(url, headers=headers, json=data)
                     return await response.json()
+
+                elif method == "postnonjson":
+                    return await self._session.post(url)
 
         except asyncio.TimeoutError as exception:
             _LOGGER.error(

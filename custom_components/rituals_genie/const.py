@@ -10,6 +10,7 @@ ISSUE_URL = "https://github.com/fred-oranje/rituals-genie/issues"
 
 # Icons
 ICON = "mdi:format-quote-close"
+ICON_WIFI = "mdi:wifi"
 
 # Device classes
 BINARY_SENSOR_DEVICE_CLASS = "connectivity"
@@ -18,7 +19,7 @@ BINARY_SENSOR_DEVICE_CLASS = "connectivity"
 BINARY_SENSOR = "binary_sensor"
 SENSOR = "sensor"
 SWITCH = "switch"
-PLATFORMS = [BINARY_SENSOR, SENSOR, SWITCH]
+PLATFORMS = [SENSOR, SWITCH]
 
 
 # Configuration and options
@@ -29,7 +30,7 @@ CONF_HUB_HASH = "hub_hash"
 CONF_HUB_NAME = "hub_name"
 
 # Defaults
-DEFAULT_NAME = DOMAIN
+DEFAULT_NAME = "Rituals"
 
 
 STARTUP_MESSAGE = f"""

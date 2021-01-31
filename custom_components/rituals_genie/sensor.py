@@ -2,6 +2,7 @@
 from .const import DEFAULT_NAME
 from .const import DOMAIN
 from .const import ICON
+from .const import ICON_WIFI
 from .const import SENSOR
 from .entity import RitualsGenieEntity
 
@@ -9,26 +10,72 @@ from .entity import RitualsGenieEntity
 async def async_setup_entry(hass, entry, async_add_devices):
     """Setup sensor platform."""
     coordinator = hass.data[DOMAIN][entry.entry_id]
-    async_add_devices([RitualsGenieSensor(coordinator, entry)])
+    async_add_devices([RitualsGeniePerfumeSensor(coordinator, entry, "perfume"), RitualsGenieFillSensor(coordinator, entry, "fill"), RitualsGenieWifiSensor(coordinator, entry, "wifi")])
 
-
-class RitualsGenieSensor(RitualsGenieEntity):
+class RitualsGeniePerfumeSensor(RitualsGenieEntity):
     """rituals_genie Sensor class."""
 
     @property
     def name(self):
         """Return the name of the sensor."""
-        return f"{DEFAULT_NAME}_{SENSOR}"
+        return f"{DEFAULT_NAME} Perfume"
 
     @property
     def state(self):
         """Return the state of the sensor."""
-        return self.coordinator.data.get("body")
+        return self.coordinator.data.get("hub").get("sensors").get("rfidc").get("title")
 
     @property
     def icon(self):
         """Return the icon of the sensor."""
         return ICON
+
+    @property
+    def device_class(self):
+        """Return de device class of the sensor."""
+        return "rituals_genie__custom_device_class"
+
+class RitualsGenieFillSensor(RitualsGenieEntity):
+    """rituals_genie Sensor class."""
+
+    @property
+    def name(self):
+        """Return the name of the sensor."""
+        return f"{DEFAULT_NAME} Fill"
+
+    @property
+    def state(self):
+        """Return the state of the sensor."""
+        return self.coordinator.data.get("hub").get("sensors").get("fillc").get("title")
+
+    @property
+    def icon(self):
+        """Return the icon of the sensor."""
+        return ICON
+
+    @property
+    def device_class(self):
+        """Return de device class of the sensor."""
+        return "rituals_genie__custom_device_class"
+
+
+class RitualsGenieWifiSensor(RitualsGenieEntity):
+    """rituals_genie Sensor class."""
+
+    @property
+    def name(self):
+        """Return the name of the sensor."""
+        return f"{DEFAULT_NAME} Wifi"
+
+    @property
+    def state(self):
+        """Return the state of the sensor."""
+        return self.coordinator.data.get("hub").get("sensors").get("wific").get("description")
+
+    @property
+    def icon(self):
+        """Return the icon of the sensor."""
+        return ICON_WIFI
 
     @property
     def device_class(self):

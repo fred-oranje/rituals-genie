@@ -11,7 +11,7 @@ from .entity import RitualsGenieEntity
 async def async_setup_entry(hass, entry, async_add_devices):
     """Setup sensor platform."""
     coordinator = hass.data[DOMAIN][entry.entry_id]
-    async_add_devices([RitualsGenieBinarySwitch(coordinator, entry)])
+    async_add_devices([RitualsGenieBinarySwitch(coordinator, entry, "")])
 
 
 class RitualsGenieBinarySwitch(RitualsGenieEntity, SwitchEntity):
@@ -19,12 +19,12 @@ class RitualsGenieBinarySwitch(RitualsGenieEntity, SwitchEntity):
 
     async def async_turn_on(self, **kwargs):  # pylint: disable=unused-argument
         """Turn on the switch."""
-        await self.coordinator.api.async_set_title("bar")
+        await self.coordinator.api.async_set_on_off(True)
         await self.coordinator.async_request_refresh()
 
     async def async_turn_off(self, **kwargs):  # pylint: disable=unused-argument
         """Turn off the switch."""
-        await self.coordinator.api.async_set_title("foo")
+        await self.coordinator.api.async_set_on_off(False)
         await self.coordinator.async_request_refresh()
 
     @property
@@ -40,4 +40,4 @@ class RitualsGenieBinarySwitch(RitualsGenieEntity, SwitchEntity):
     @property
     def is_on(self):
         """Return true if the switch is on."""
-        return self.coordinator.data.get("title", "") == "foo"
+        return self.coordinator.data.get("hub").get("attributes").get("fanc", "0") == "1"

@@ -8,14 +8,15 @@ from .const import VERSION
 
 
 class RitualsGenieEntity(CoordinatorEntity):
-    def __init__(self, coordinator, config_entry):
+    def __init__(self, coordinator, config_entry, sensor_name):
         super().__init__(coordinator)
         self.config_entry = config_entry
+        self.sensor_name = sensor_name
 
     @property
     def unique_id(self):
         """Return a unique ID to use for this entity."""
-        return self.config_entry.entry_id
+        return f"{self.config_entry.entry_id}_{self.sensor_name}"
 
     @property
     def device_info(self):
