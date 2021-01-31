@@ -16,32 +16,40 @@ HEADERS = {"Content-type": "application/json; charset=UTF-8"}
 
 class RitualsGenieApiClient:
     def __init__(
-        self, username: str, password: str, session: aiohttp.ClientSession
+        self, hub_hash: str, session: aiohttp.ClientSession
     ) -> None:
-        """Sample API Client."""
-        self._username = username
-        self._password = password
+        """Rituals API Client."""
+        self._hub_hash = hub_hash
         self._session = session
-        self._account_hash = None
 
-    async def async_login(self) -> dict:
+        _LOGGER.info("Set up with hash: %s", self._hub_hash)
+
+    async def async_get_hubs(self, username: str, password: str) -> dict:
         """Login using the API"""
         url = API_URL + "/ocapi/login"
-        response = await self.api_wrapper("post", url, data={"email": self._username, "password": self._password}, headers=HEADERS)
+        response = await self.api_wrapper("post", url, data={"email": username, "password": password}, headers=HEADERS)
+
+        _LOGGER.info("Login response: %s", response)
 
         if (response["account_hash"] == None):
+            _LOGGER.info("Authentication failed: %s", response)
             raise Exception("Authentication failed")
         else:
-            self._account_hash = response["account_hash"]
+            _LOGGER.info("Authentication success: %s", response)
+            _account_hash = response["account_hash"]
 
-        return response
+        """Retrieve hubs"""
+        url = API_URL + "/api/account/hubs/" + _account_hash
+        response = await self.api_wrapper("get", url)
+
+        _LOGGER.info("retrieve hubs: %s", response)
+
+        for hub in response:
+            return hub
+
+        raise Exception("No hubs found")
 
     async def async_get_data(self) -> dict:
-        if self._account_hash == None:
-            await self.async_login()
-
-        _LOGGER.info("Account hash: %s", self._account_hash)
-
         """Get data from the API."""
         url = "https://jsonplaceholder.typicode.com/posts/1"
         return await self.api_wrapper("get", url)

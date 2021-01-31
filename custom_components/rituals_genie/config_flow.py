@@ -7,6 +7,8 @@ from homeassistant.helpers.aiohttp_client import async_create_clientsession
 from .api import RitualsGenieApiClient
 from .const import CONF_PASSWORD
 from .const import CONF_USERNAME
+from .const import CONF_HUB_HASH
+from .const import CONF_HUB_NAME
 from .const import DOMAIN
 from .const import PLATFORMS
 
@@ -26,19 +28,19 @@ class RitualsGenieFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
         self._errors = {}
 
         # Uncomment the next 2 lines if only a single instance of the integration is allowed:
-        # if self._async_current_entries():
-        #     return self.async_abort(reason="single_instance_allowed")
+        if self._async_current_entries():
+            return self.async_abort(reason="single_instance_allowed")
 
         if user_input is not None:
-            valid = await self._test_credentials(
+            hub = await self._test_credentials(
                 user_input[CONF_USERNAME], user_input[CONF_PASSWORD]
             )
-            if valid:
-                return self.async_create_entry(
-                    title=user_input[CONF_USERNAME], data=user_input
-                )
-            else:
+            if hub == False:
                 self._errors["base"] = "auth"
+            else:
+                return self.async_create_entry(
+                    title=hub['hub']['attributes']['roomnamec'], data={CONF_HUB_NAME: hub['hub']['attributes']['roomnamec'], CONF_HUB_HASH: hub['hub']['hash']}
+                )
 
             return await self._show_config_form(user_input)
 
@@ -63,9 +65,8 @@ class RitualsGenieFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
         """Return true if credentials is valid."""
         try:
             session = async_create_clientsession(self.hass)
-            client = RitualsGenieApiClient(username, password, session)
-            await client.async_get_data()
-            return True
+            client = RitualsGenieApiClient("", session)
+            return await client.async_get_hubs(username, password)
         except Exception:  # pylint: disable=broad-except
             pass
         return False
@@ -102,5 +103,5 @@ class RitualsGenieOptionsFlowHandler(config_entries.OptionsFlow):
     async def _update_options(self):
         """Update config entry options."""
         return self.async_create_entry(
-            title=self.config_entry.data.get(CONF_USERNAME), data=self.options
+            title=self.config_entry.data.get(CONF_HUB_NAME), data=self.options
         )
