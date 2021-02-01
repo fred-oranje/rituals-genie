@@ -3,7 +3,7 @@ from homeassistant.components.switch import SwitchEntity
 
 from .const import DEFAULT_NAME
 from .const import DOMAIN
-from .const import ICON
+from .const import ICON_FAN
 from .const import SWITCH
 from .entity import RitualsGenieEntity
 
@@ -35,9 +35,11 @@ class RitualsGenieBinarySwitch(RitualsGenieEntity, SwitchEntity):
     @property
     def icon(self):
         """Return the icon of this switch."""
-        return ICON
+        return ICON_FAN
 
     @property
     def is_on(self):
         """Return true if the switch is on."""
-        return self.coordinator.data.get("hub").get("attributes").get("fanc", "0") == "1"
+        return (
+            self.coordinator.data.get("hub").get("attributes").get("fanc", "0") == "1"
+        )

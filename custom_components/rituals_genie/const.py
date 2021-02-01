@@ -11,6 +11,9 @@ ISSUE_URL = "https://github.com/fred-oranje/rituals-genie/issues"
 # Icons
 ICON = "mdi:format-quote-close"
 ICON_WIFI = "mdi:wifi"
+ICON_PERFUME = "mdi:nfc-variant"
+ICON_FAN = "mdi:fan"
+ICON_FILL = "mdi:format-color-fill"
 
 # Device classes
 BINARY_SENSOR_DEVICE_CLASS = "connectivity"
