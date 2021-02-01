@@ -5,6 +5,9 @@
   "issue_tracker": "https://github.com/fred-oranje/rituals-genie/issues",
   "dependencies": [],
   "config_flow": true,
-  "codeowners": ["@fred-oranje"],
-  "requirements": []
+  "codeowners": [
+    "@fred-oranje"
+  ],
+  "requirements": [],
+  "version": "0.0.1"
 }
