@@ -15,23 +15,23 @@ HEADERS = {"Content-type": "application/json; charset=UTF-8"}
 
 
 class RitualsGenieApiClient:
-    def __init__(
-        self, hub_hash: str, session: aiohttp.ClientSession
-    ) -> None:
+    def __init__(self, hub_hash: str, session: aiohttp.ClientSession) -> None:
         """Rituals API Client."""
         self._hub_hash = hub_hash
         self._session = session
 
         _LOGGER.info("Set up with hash: %s", self._hub_hash)
 
-    async def async_get_hubs(self, username: str, password: str) -> dict:
+    async def async_get_hubs(self, username: str, password: str) -> list:
         """Login using the API"""
         url = API_URL + "/ocapi/login"
-        response = await self.api_wrapper("post", url, data={"email": username, "password": password}, headers=HEADERS)
+        response = await self.api_wrapper(
+            "post", url, data={"email": username, "password": password}, headers=HEADERS
+        )
 
         _LOGGER.info("Login response: %s", response)
 
-        if (response["account_hash"] == None):
+        if response["account_hash"] == None:
             _LOGGER.info("Authentication failed: %s", response)
             raise Exception("Authentication failed")
         else:
@@ -42,12 +42,9 @@ class RitualsGenieApiClient:
         url = API_URL + "/api/account/hubs/" + _account_hash
         response = await self.api_wrapper("get", url)
 
-        _LOGGER.info("retrieve hubs: %s", response)
+        _LOGGER.info("Hubs: %s", response)
 
-        for hub in response:
-            return hub
-
-        raise Exception("No hubs found")
+        return response
 
     async def async_get_data(self) -> dict:
         """Get data from the API."""
@@ -60,7 +57,14 @@ class RitualsGenieApiClient:
             fanc = "1"
         else:
             fanc = "0"
-        url = API_URL + "/api/hub/update/attr?hub=" + self._hub_hash + "&json=%7B%22attr%22%3A%7B%22fanc%22%3A%22" + fanc + "%22%7D%7D"
+        url = (
+            API_URL
+            + "/api/hub/update/attr?hub="
+            + self._hub_hash
+            + "&json=%7B%22attr%22%3A%7B%22fanc%22%3A%22"
+            + fanc
+            + "%22%7D%7D"
+        )
 
         await self.api_wrapper("postnonjson", url)
 

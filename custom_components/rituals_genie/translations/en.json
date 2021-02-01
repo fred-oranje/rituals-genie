@@ -8,10 +8,18 @@
           "username": "Username",
           "password": "Password"
         }
+      },
+      "hub": {
+        "title": "Select Rituals Genie",
+        "description": "Choose the Genie to add",
+        "data": {
+          "hub_name": "Genie"
+        }
       }
     },
     "error": {
-      "auth": "Username/Password is wrong."
+      "auth": "Username/Password is wrong.",
+      "invalid_hub": "Invalid Genie selected."
     },
     "abort": {
       "single_instance_allowed": "Only a single instance is allowed."

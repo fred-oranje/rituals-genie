@@ -1,5 +1,6 @@
 """Adds config flow for Rituals Genie."""
 import voluptuous as vol
+import logging
 from homeassistant import config_entries
 from homeassistant.core import callback
 from homeassistant.helpers.aiohttp_client import async_create_clientsession
@@ -11,6 +12,8 @@ from .const import CONF_HUB_HASH
 from .const import CONF_HUB_NAME
 from .const import DOMAIN
 from .const import PLATFORMS
+
+_LOGGER: logging.Logger = logging.getLogger(__package__)
 
 
 class RitualsGenieFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
@@ -32,19 +35,49 @@ class RitualsGenieFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
             return self.async_abort(reason="single_instance_allowed")
 
         if user_input is not None:
-            hub = await self._test_credentials(
+            hubs = await self._test_credentials(
                 user_input[CONF_USERNAME], user_input[CONF_PASSWORD]
             )
-            if hub == False:
+            if hubs == False:
                 self._errors["base"] = "auth"
             else:
-                return self.async_create_entry(
-                    title=hub['hub']['attributes']['roomnamec'], data={CONF_HUB_NAME: hub['hub']['attributes']['roomnamec'], CONF_HUB_HASH: hub['hub']['hash']}
-                )
+                self._hubs_info = hubs
+
+                return await self.async_step_hub()
 
             return await self._show_config_form(user_input)
 
         return await self._show_config_form(user_input)
+
+    async def async_step_hub(self, user_input=None):
+        """Handle second step in the user flow"""
+        self._errors = {}
+
+        if user_input is not None:
+            # Find the hub
+            hub_hash = None
+            hub_name = None
+            for hub in self._hubs_info:
+                name = hub.get("hub").get("attributes").get("roomnamec")
+                if name == user_input[CONF_HUB_NAME]:
+                    hub_name = name
+                    hub_hash = hub.get("hub").get("hash")
+                    break
+
+            if hub_hash is None:
+                self._errors["base"] = "invalid_hub"
+            else:
+                return self.async_create_entry(
+                    title=hub_name,
+                    data={
+                        CONF_HUB_NAME: hub_name,
+                        CONF_HUB_HASH: hub_hash,
+                    },
+                )
+
+            return await self._show_hubs_config_form(self._hubs_info, user_input)
+
+        return await self._show_hubs_config_form(self._hubs_info, user_input)
 
     @staticmethod
     @callback
@@ -52,12 +85,31 @@ class RitualsGenieFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
         return RitualsGenieOptionsFlowHandler(config_entry)
 
     async def _show_config_form(self, user_input):  # pylint: disable=unused-argument
-        """Show the configuration form to edit location data."""
+        """Show the configuration form to edit username / password data."""
         return self.async_show_form(
             step_id="user",
             data_schema=vol.Schema(
                 {vol.Required(CONF_USERNAME): str, vol.Required(CONF_PASSWORD): str}
             ),
+            errors=self._errors,
+        )
+
+    async def _show_hubs_config_form(
+        self, hubs, user_input
+    ):  # pylint: disable=unused-argument
+        """Show the configuration form to choose hub"""
+        hub_names = []
+        for hub in hubs:
+            name = hub.get("hub").get("attributes").get("roomnamec")
+            try:
+                hub_names.index(name)
+            except ValueError:
+                hub_names.append(name)
+                pass
+
+        return self.async_show_form(
+            step_id="hub",
+            data_schema=vol.Schema({vol.Required(CONF_HUB_NAME): vol.In(hub_names)}),
             errors=self._errors,
         )
 
