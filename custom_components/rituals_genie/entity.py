@@ -5,6 +5,9 @@ from .const import ATTRIBUTION
 from .const import DOMAIN
 from .const import NAME
 from .const import VERSION
+from .const import MANUFACTURER
+from .const import MODEL
+from .const import CONF_HUB_NAME
 
 
 class RitualsGenieEntity(CoordinatorEntity):
@@ -12,19 +15,20 @@ class RitualsGenieEntity(CoordinatorEntity):
         super().__init__(coordinator)
         self.config_entry = config_entry
         self.sensor_name = sensor_name
+        self.hub_name = config_entry.data.get(CONF_HUB_NAME)
 
     @property
     def unique_id(self):
         """Return a unique ID to use for this entity."""
-        return f"{self.config_entry.entry_id}_{self.sensor_name}"
+        return f"{self.config_entry.entry_id}_{self.hub_name}_{self.sensor_name}"
 
     @property
     def device_info(self):
         return {
-            "identifiers": {(DOMAIN, self.unique_id)},
-            "name": NAME,
-            "model": VERSION,
-            "manufacturer": NAME,
+            "identifiers": {(DOMAIN, self.config_entry.entry_id)},
+            "name": f"{NAME} {self.hub_name}",
+            "model": MODEL,
+            "manufacturer": MANUFACTURER,
         }
 
     @property

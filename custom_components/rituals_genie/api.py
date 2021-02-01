@@ -20,8 +20,6 @@ class RitualsGenieApiClient:
         self._hub_hash = hub_hash
         self._session = session
 
-        _LOGGER.info("Set up with hash: %s", self._hub_hash)
-
     async def async_get_hubs(self, username: str, password: str) -> list:
         """Login using the API"""
         url = API_URL + "/ocapi/login"
@@ -29,20 +27,14 @@ class RitualsGenieApiClient:
             "post", url, data={"email": username, "password": password}, headers=HEADERS
         )
 
-        _LOGGER.info("Login response: %s", response)
-
         if response["account_hash"] == None:
-            _LOGGER.info("Authentication failed: %s", response)
             raise Exception("Authentication failed")
         else:
-            _LOGGER.info("Authentication success: %s", response)
             _account_hash = response["account_hash"]
 
         """Retrieve hubs"""
         url = API_URL + "/api/account/hubs/" + _account_hash
         response = await self.api_wrapper("get", url)
-
-        _LOGGER.info("Hubs: %s", response)
 
         return response
 

@@ -1,6 +1,5 @@
 """Adds config flow for Rituals Genie."""
 import voluptuous as vol
-import logging
 from homeassistant import config_entries
 from homeassistant.core import callback
 from homeassistant.helpers.aiohttp_client import async_create_clientsession
@@ -12,8 +11,6 @@ from .const import CONF_HUB_HASH
 from .const import CONF_HUB_NAME
 from .const import DOMAIN
 from .const import PLATFORMS
-
-_LOGGER: logging.Logger = logging.getLogger(__package__)
 
 
 class RitualsGenieFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
@@ -29,10 +26,6 @@ class RitualsGenieFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
     async def async_step_user(self, user_input=None):
         """Handle a flow initialized by the user."""
         self._errors = {}
-
-        # Uncomment the next 2 lines if only a single instance of the integration is allowed:
-        if self._async_current_entries():
-            return self.async_abort(reason="single_instance_allowed")
 
         if user_input is not None:
             hubs = await self._test_credentials(
@@ -58,7 +51,7 @@ class RitualsGenieFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
             hub_hash = None
             hub_name = None
             for hub in self._hubs_info:
-                name = hub.get("hub").get("attributes").get("roomnamec")
+                name = hub.get("hub").get("attributes").get("roomnamec")[0]
                 if name == user_input[CONF_HUB_NAME]:
                     hub_name = name
                     hub_hash = hub.get("hub").get("hash")
@@ -100,7 +93,7 @@ class RitualsGenieFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
         """Show the configuration form to choose hub"""
         hub_names = []
         for hub in hubs:
-            name = hub.get("hub").get("attributes").get("roomnamec")
+            name = hub.get("hub").get("attributes").get("roomnamec")[0]
             try:
                 hub_names.index(name)
             except ValueError:

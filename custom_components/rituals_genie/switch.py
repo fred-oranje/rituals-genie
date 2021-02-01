@@ -30,7 +30,7 @@ class RitualsGenieBinarySwitch(RitualsGenieEntity, SwitchEntity):
     @property
     def name(self):
         """Return the name of the switch."""
-        return f"{DEFAULT_NAME}_{SWITCH}"
+        return f"{DEFAULT_NAME} {self.hub_name}"
 
     @property
     def icon(self):

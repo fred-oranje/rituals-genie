@@ -26,7 +26,7 @@ class RitualsGeniePerfumeSensor(RitualsGenieEntity):
     @property
     def name(self):
         """Return the name of the sensor."""
-        return f"{DEFAULT_NAME} Perfume"
+        return f"{DEFAULT_NAME} {self.hub_name} Perfume"
 
     @property
     def state(self):
@@ -50,7 +50,7 @@ class RitualsGenieFillSensor(RitualsGenieEntity):
     @property
     def name(self):
         """Return the name of the sensor."""
-        return f"{DEFAULT_NAME} Fill"
+        return f"{DEFAULT_NAME} {self.hub_name} Fill"
 
     @property
     def state(self):
@@ -74,7 +74,7 @@ class RitualsGenieWifiSensor(RitualsGenieEntity):
     @property
     def name(self):
         """Return the name of the sensor."""
-        return f"{DEFAULT_NAME} Wifi"
+        return f"{DEFAULT_NAME} {self.hub_name} Wifi"
 
     @property
     def state(self):

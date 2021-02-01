@@ -1,6 +1,8 @@
 """Constants for Rituals Genie."""
 # Base component constants
 NAME = "Rituals Genie"
+MANUFACTURER = "Rituals"
+MODEL = "Genie"
 DOMAIN = "rituals_genie"
 DOMAIN_DATA = f"{DOMAIN}_data"
 VERSION = "0.0.1"
@@ -33,7 +35,7 @@ CONF_HUB_HASH = "hub_hash"
 CONF_HUB_NAME = "hub_name"
 
 # Defaults
-DEFAULT_NAME = "Rituals"
+DEFAULT_NAME = "Rituals Genie"
 
 
 STARTUP_MESSAGE = f"""

@@ -14,16 +14,12 @@
 [![Discord][discord-shield]][discord]
 [![Community Forum][forum-shield]][forum]
 
-**TO BE REMOVED: If you need help, as a developer, to use this custom component tempalte,
-please look at the [User Guide in the Cookiecutter documentation](https://cookiecutter-homeassistant-custom-component.readthedocs.io/en/stable/quickstart.html)**
-
 **This component will set up the following platforms.**
 
-| Platform        | Description                                                               |
-| --------------- | ------------------------------------------------------------------------- |
-| `binary_sensor` | Show something `True` or `False`.                                         |
-| `sensor`        | Show info from Rituals Genie API. |
-| `switch`        | Switch something `True` or `False`.                                       |
+| Platform        | Description                           |
+| --------------- | ------------------------------------- |
+| `sensor`        | Show Wifi, Perfume and Fill from API. |
+| `switch`        | Turn the Rituals Genie on and off     |
 
 ![example][exampleimg]
 
@@ -41,15 +37,9 @@ Using your HA configuration directory (folder) as a starting point you should no
 
 ```text
 custom_components/rituals_genie/translations/en.json
-custom_components/rituals_genie/translations/fr.json
-custom_components/rituals_genie/translations/nb.json
-custom_components/rituals_genie/translations/sensor.en.json
-custom_components/rituals_genie/translations/sensor.fr.json
-custom_components/rituals_genie/translations/sensor.nb.json
-custom_components/rituals_genie/translations/sensor.nb.json
+custom_components/rituals_genie/translations/nl.json
 custom_components/rituals_genie/__init__.py
 custom_components/rituals_genie/api.py
-custom_components/rituals_genie/binary_sensor.py
 custom_components/rituals_genie/config_flow.py
 custom_components/rituals_genie/const.py
 custom_components/rituals_genie/manifest.json
