@@ -11,10 +11,10 @@
 
 **This component will set up the following platforms.**
 
-| Platform        | Description                           |
-| --------------- | ------------------------------------- |
-| `sensor`        | Show Wifi, Perfume and Fill from API. |
-| `switch`        | Turn the Rituals Genie on and off     |
+| Platform | Description                           |
+| -------- | ------------------------------------- |
+| `sensor` | Show Wifi, Perfume and Fill from API. |
+| `switch` | Turn the Rituals Genie on and off     |
 
 ![example][exampleimg]
 

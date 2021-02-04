@@ -1,10 +1,9 @@
 """Sensor platform for Rituals Genie."""
 from .const import DEFAULT_NAME
 from .const import DOMAIN
-from .const import ICON_PERFUME
 from .const import ICON_FILL
+from .const import ICON_PERFUME
 from .const import ICON_WIFI
-from .const import SENSOR
 from .entity import RitualsGenieEntity
 
 
