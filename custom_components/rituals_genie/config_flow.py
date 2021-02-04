@@ -5,10 +5,10 @@ from homeassistant.core import callback
 from homeassistant.helpers.aiohttp_client import async_create_clientsession
 
 from .api import RitualsGenieApiClient
-from .const import CONF_PASSWORD
-from .const import CONF_USERNAME
 from .const import CONF_HUB_HASH
 from .const import CONF_HUB_NAME
+from .const import CONF_PASSWORD
+from .const import CONF_USERNAME
 from .const import DOMAIN
 from .const import PLATFORMS
 
@@ -31,7 +31,7 @@ class RitualsGenieFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
             hubs = await self._test_credentials(
                 user_input[CONF_USERNAME], user_input[CONF_PASSWORD]
             )
-            if hubs == False:
+            if not hubs:
                 self._errors["base"] = "auth"
             else:
                 self._hubs_info = hubs

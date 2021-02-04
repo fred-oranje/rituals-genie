@@ -2,12 +2,11 @@
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
 
 from .const import ATTRIBUTION
+from .const import CONF_HUB_NAME
 from .const import DOMAIN
-from .const import NAME
-from .const import VERSION
 from .const import MANUFACTURER
 from .const import MODEL
-from .const import CONF_HUB_NAME
+from .const import NAME
 
 
 class RitualsGenieEntity(CoordinatorEntity):

@@ -17,10 +17,7 @@ from homeassistant.helpers.update_coordinator import DataUpdateCoordinator
 from homeassistant.helpers.update_coordinator import UpdateFailed
 
 from .api import RitualsGenieApiClient
-from .const import CONF_PASSWORD
-from .const import CONF_USERNAME
 from .const import CONF_HUB_HASH
-from .const import CONF_HUB_NAME
 from .const import DOMAIN
 from .const import PLATFORMS
 from .const import STARTUP_MESSAGE
