@@ -5,12 +5,15 @@ from homeassistant.core import callback
 from homeassistant.helpers.aiohttp_client import async_create_clientsession
 
 from .api import RitualsGenieApiClient
+from .const import CONF_FILL_SENSOR_ENABLED
 from .const import CONF_HUB_HASH
 from .const import CONF_HUB_NAME
 from .const import CONF_PASSWORD
+from .const import CONF_PERFUME_SENSOR_ENABLED
+from .const import CONF_SWITCH_ENABLED
 from .const import CONF_USERNAME
+from .const import CONF_WIFI_SENSOR_ENABLED
 from .const import DOMAIN
-from .const import PLATFORMS
 
 
 class RitualsGenieFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
@@ -139,8 +142,22 @@ class RitualsGenieOptionsFlowHandler(config_entries.OptionsFlow):
             step_id="user",
             data_schema=vol.Schema(
                 {
-                    vol.Required(x, default=self.options.get(x, True)): bool
-                    for x in sorted(PLATFORMS)
+                    vol.Required(
+                        CONF_PERFUME_SENSOR_ENABLED,
+                        default=self.options.get(CONF_PERFUME_SENSOR_ENABLED, True),
+                    ): bool,
+                    vol.Required(
+                        CONF_FILL_SENSOR_ENABLED,
+                        default=self.options.get(CONF_FILL_SENSOR_ENABLED, True),
+                    ): bool,
+                    vol.Required(
+                        CONF_WIFI_SENSOR_ENABLED,
+                        default=self.options.get(CONF_WIFI_SENSOR_ENABLED, True),
+                    ): bool,
+                    vol.Required(
+                        CONF_SWITCH_ENABLED,
+                        default=self.options.get(CONF_SWITCH_ENABLED, True),
+                    ): bool,
                 }
             ),
         )

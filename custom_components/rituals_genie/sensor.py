@@ -1,4 +1,7 @@
 """Sensor platform for Rituals Genie."""
+from .const import CONF_FILL_SENSOR_ENABLED
+from .const import CONF_PERFUME_SENSOR_ENABLED
+from .const import CONF_WIFI_SENSOR_ENABLED
 from .const import DEFAULT_NAME
 from .const import DOMAIN
 from .const import ICON_FILL
@@ -10,13 +13,16 @@ from .entity import RitualsGenieEntity
 async def async_setup_entry(hass, entry, async_add_devices):
     """Setup sensor platform."""
     coordinator = hass.data[DOMAIN][entry.entry_id]
-    async_add_devices(
-        [
-            RitualsGeniePerfumeSensor(coordinator, entry, "perfume"),
-            RitualsGenieFillSensor(coordinator, entry, "fill"),
-            RitualsGenieWifiSensor(coordinator, entry, "wifi"),
-        ]
-    )
+
+    sensors = []
+    if entry.options.get(CONF_FILL_SENSOR_ENABLED, True):
+        sensors.append(RitualsGeniePerfumeSensor(coordinator, entry, "perfume"))
+    if entry.options.get(CONF_PERFUME_SENSOR_ENABLED, True):
+        sensors.append(RitualsGenieFillSensor(coordinator, entry, "fill"))
+    if entry.options.get(CONF_WIFI_SENSOR_ENABLED, True):
+        sensors.append(RitualsGenieWifiSensor(coordinator, entry, "wifi"))
+
+    async_add_devices(sensors)
 
 
 class RitualsGeniePerfumeSensor(RitualsGenieEntity):

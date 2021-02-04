@@ -17,22 +17,20 @@ ICON_PERFUME = "mdi:nfc-variant"
 ICON_FAN = "mdi:fan"
 ICON_FILL = "mdi:format-color-fill"
 
-# Device classes
-BINARY_SENSOR_DEVICE_CLASS = "connectivity"
-
 # Platforms
-BINARY_SENSOR = "binary_sensor"
 SENSOR = "sensor"
 SWITCH = "switch"
 PLATFORMS = [SENSOR, SWITCH]
 
-
 # Configuration and options
-CONF_ENABLED = "enabled"
 CONF_USERNAME = "username"
 CONF_PASSWORD = "password"
 CONF_HUB_HASH = "hub_hash"
 CONF_HUB_NAME = "hub_name"
+CONF_WIFI_SENSOR_ENABLED = "wifi_enabled"
+CONF_PERFUME_SENSOR_ENABLED = "perfume_enabled"
+CONF_FILL_SENSOR_ENABLED = "fill_enabled"
+CONF_SWITCH_ENABLED = "switch_enabled"
 
 # Defaults
 DEFAULT_NAME = "Rituals Genie"

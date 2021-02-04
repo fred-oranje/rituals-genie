@@ -26,8 +26,10 @@
     "step": {
       "user": {
         "data": {
-          "sensor": "Sensors enabled",
-          "switch": "Switch enabled"
+          "wifi_enabled": "WiFi sensor enabled",
+          "perfume_enabled": "Perfume sensor enabled",
+          "fill_enabled": "Fill sensor enabled",
+          "switch_enabled": "Switch enabled"
         }
       }
     }

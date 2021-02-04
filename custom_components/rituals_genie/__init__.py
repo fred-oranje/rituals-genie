@@ -17,10 +17,16 @@ from homeassistant.helpers.update_coordinator import DataUpdateCoordinator
 from homeassistant.helpers.update_coordinator import UpdateFailed
 
 from .api import RitualsGenieApiClient
+from .const import CONF_FILL_SENSOR_ENABLED
 from .const import CONF_HUB_HASH
+from .const import CONF_PERFUME_SENSOR_ENABLED
+from .const import CONF_SWITCH_ENABLED
+from .const import CONF_WIFI_SENSOR_ENABLED
 from .const import DOMAIN
 from .const import PLATFORMS
+from .const import SENSOR
 from .const import STARTUP_MESSAGE
+from .const import SWITCH
 
 SCAN_INTERVAL = timedelta(seconds=60)
 
@@ -51,12 +57,17 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry):
 
     hass.data[DOMAIN][entry.entry_id] = coordinator
 
-    for platform in PLATFORMS:
-        if entry.options.get(platform, True):
-            coordinator.platforms.append(platform)
-            hass.async_add_job(
-                hass.config_entries.async_forward_entry_setup(entry, platform)
-            )
+    if entry.options.get(CONF_SWITCH_ENABLED, True):
+        coordinator.platforms.append(SWITCH)
+        hass.async_add_job(hass.config_entries.async_forward_entry_setup(entry, SWITCH))
+
+    if (
+        entry.options.get(CONF_FILL_SENSOR_ENABLED, True)
+        or entry.options.get(CONF_PERFUME_SENSOR_ENABLED, True)
+        or entry.options.get(CONF_WIFI_SENSOR_ENABLED, True)
+    ):
+        coordinator.platforms.append(SENSOR)
+        hass.async_add_job(hass.config_entries.async_forward_entry_setup(entry, SENSOR))
 
     entry.add_update_listener(async_reload_entry)
     return True

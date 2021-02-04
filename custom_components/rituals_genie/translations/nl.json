@@ -26,8 +26,10 @@
     "step": {
       "user": {
         "data": {
-          "sensor": "Sensors ingeschakeld",
-          "switch": "Schakelaar ingeschakeld"
+          "wifi_enabled": "WiFi sensor ingeschakeld",
+          "perfume_enabled": "Parfum sensor ingeschakeld",
+          "fill_enabled": "Vulniveau sensor ingeschakeld",
+          "switch_enabled": "Schakelaar ingeschakeld"
         }
       }
     }
