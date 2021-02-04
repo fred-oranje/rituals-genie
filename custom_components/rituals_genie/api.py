@@ -27,7 +27,7 @@ class RitualsGenieApiClient:
             "post", url, data={"email": username, "password": password}, headers=HEADERS
         )
 
-        if response["account_hash"] == None:
+        if response["account_hash"] is None:
             raise Exception("Authentication failed")
         else:
             _account_hash = response["account_hash"]
@@ -45,7 +45,7 @@ class RitualsGenieApiClient:
 
     async def async_set_on_off(self, value: bool) -> None:
         """Get data from the API."""
-        if value == True:
+        if value is True:
             fanc = "1"
         else:
             fanc = "0"
